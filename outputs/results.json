@@ -1,4 +1,138 @@
 {
+  "control_variate": {
+    "method": "control_variate",
+    "paths": 1000000,
+    "pilot_paths": 20000,
+    "total_paths": 1020000,
+    "seed": 20261105,
+    "beta": 0.5801222153128786,
+    "control_expectation": 250.10717055913355,
+    "rng": "PCG64; SeedSequence child 0 pilot, child 1 main",
+    "plain_same_draws": {
+      "price": 12.421399075829056,
+      "standard_error": 0.018275864803304665,
+      "ci95_low": 12.385578380814579,
+      "ci95_high": 12.457219770843533,
+      "independent_units": 1000000
+    },
+    "price": 12.418689341542079,
+    "standard_error": 0.008302489959596536,
+    "ci95_low": 12.40241646122127,
+    "ci95_high": 12.434962221862888,
+    "independent_units": 1000000
+  },
+  "control_variate_seed_comparison": [
+    {
+      "method": "control_variate",
+      "paths": 100000,
+      "pilot_paths": 20000,
+      "total_paths": 120000,
+      "seed": 20261105,
+      "beta": 0.5801222153128786,
+      "control_expectation": 250.10717055913355,
+      "rng": "PCG64; SeedSequence child 0 pilot, child 1 main",
+      "plain_same_draws": {
+        "price": 12.458772488069357,
+        "standard_error": 0.057734731372921316,
+        "ci95_low": 12.345612414578431,
+        "ci95_high": 12.571932561560283,
+        "independent_units": 100000
+      },
+      "price": 12.468413923220844,
+      "standard_error": 0.026324199096379154,
+      "ci95_low": 12.41681849299194,
+      "ci95_high": 12.520009353449748,
+      "independent_units": 100000
+    },
+    {
+      "method": "control_variate",
+      "paths": 100000,
+      "pilot_paths": 20000,
+      "total_paths": 120000,
+      "seed": 20261106,
+      "beta": 0.5818082538458265,
+      "control_expectation": 250.10717055913355,
+      "rng": "PCG64; SeedSequence child 0 pilot, child 1 main",
+      "plain_same_draws": {
+        "price": 12.421304183017458,
+        "standard_error": 0.05785553896849917,
+        "ci95_low": 12.3079073266392,
+        "ci95_high": 12.534701039395717,
+        "independent_units": 100000
+      },
+      "price": 12.39164064480647,
+      "standard_error": 0.02618717876833215,
+      "ci95_low": 12.340313774420538,
+      "ci95_high": 12.442967515192402,
+      "independent_units": 100000
+    },
+    {
+      "method": "control_variate",
+      "paths": 100000,
+      "pilot_paths": 20000,
+      "total_paths": 120000,
+      "seed": 20261107,
+      "beta": 0.5814538016140803,
+      "control_expectation": 250.10717055913355,
+      "rng": "PCG64; SeedSequence child 0 pilot, child 1 main",
+      "plain_same_draws": {
+        "price": 12.45756796542458,
+        "standard_error": 0.05791867458211784,
+        "ci95_low": 12.344047363243629,
+        "ci95_high": 12.571088567605532,
+        "independent_units": 100000
+      },
+      "price": 12.435447698174677,
+      "standard_error": 0.02625050636583354,
+      "ci95_low": 12.383996705697644,
+      "ci95_high": 12.48689869065171,
+      "independent_units": 100000
+    },
+    {
+      "method": "control_variate",
+      "paths": 100000,
+      "pilot_paths": 20000,
+      "total_paths": 120000,
+      "seed": 20261108,
+      "beta": 0.5882098530037312,
+      "control_expectation": 250.10717055913355,
+      "rng": "PCG64; SeedSequence child 0 pilot, child 1 main",
+      "plain_same_draws": {
+        "price": 12.424616611374915,
+        "standard_error": 0.057772888258159155,
+        "ci95_low": 12.311381750388923,
+        "ci95_high": 12.537851472360908,
+        "independent_units": 100000
+      },
+      "price": 12.452653040840682,
+      "standard_error": 0.026290909293465264,
+      "ci95_low": 12.40112285862549,
+      "ci95_high": 12.504183223055874,
+      "independent_units": 100000
+    },
+    {
+      "method": "control_variate",
+      "paths": 100000,
+      "pilot_paths": 20000,
+      "total_paths": 120000,
+      "seed": 20261109,
+      "beta": 0.5858498097494648,
+      "control_expectation": 250.10717055913355,
+      "rng": "PCG64; SeedSequence child 0 pilot, child 1 main",
+      "plain_same_draws": {
+        "price": 12.438077700454235,
+        "standard_error": 0.05770832480695812,
+        "ci95_low": 12.324969383832597,
+        "ci95_high": 12.551186017075873,
+        "independent_units": 100000
+      },
+      "price": 12.427893320690014,
+      "standard_error": 0.026253030057225086,
+      "ci95_low": 12.376437381777853,
+      "ci95_high": 12.479349259602175,
+      "independent_units": 100000
+    }
+  ],
   "ticker": "AAPL",
   "valuation_date": "2024-12-31",
   "first_observation": "2024-01-02",
@@ -184,5 +318,9 @@
     "numpy": "1.26.4",
     "matplotlib": "3.8.3",
     "rng": "numpy.random.PCG64"
+  },
+  "independent_quadrature": {
+    "price": 12.419241361075015,
+    "absolute_difference": 2.9056401729121717e-10
   }
 }

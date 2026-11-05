@@ -89,3 +89,25 @@ def monte_carlo(option,n=100000,seed=20261105,antithetic=False):
         z=rng.standard_normal(n)
         _,units=from_draws(option,z)
     return dict(paths=n,seed=seed,method='antithetic' if antithetic else 'plain',**summarize(units))
+
+
+def control_variate(option,n=1_000_000,pilot_n=20000,seed=20261105):
+    """Use an independently fitted pilot coefficient and known discounted S_T mean."""
+    option.validate()
+    if type(n) is not int or n<2 or type(pilot_n) is not int or pilot_n<2:
+        raise ValueError('main and pilot counts must be integers >=2')
+    pilot_seed,main_seed=np.random.SeedSequence(seed).spawn(2)
+    pilot_rng=np.random.Generator(np.random.PCG64(pilot_seed))
+    main_rng=np.random.Generator(np.random.PCG64(main_seed))
+    pilot_terminal,pilot_y=from_draws(option,pilot_rng.standard_normal(pilot_n))
+    pilot_x=math.exp(-option.rate*option.maturity)*pilot_terminal
+    variance=float(pilot_x.var(ddof=1))
+    beta=0. if option.volatility==0 or option.maturity==0 or variance==0 else float(np.cov(pilot_y,pilot_x,ddof=1)[0,1]/variance)
+    terminal,y=from_draws(option,main_rng.standard_normal(n))
+    x=math.exp(-option.rate*option.maturity)*terminal
+    expected_x=option.spot*math.exp(-option.dividend_yield*option.maturity)
+    adjusted=y-beta*(x-expected_x)
+    plain=summarize(y)
+    return dict(method='control_variate',paths=n,pilot_paths=pilot_n,total_paths=n+pilot_n,seed=seed,beta=beta,
+                control_expectation=expected_x,rng='PCG64; SeedSequence child 0 pilot, child 1 main',
+                plain_same_draws=plain,**summarize(adjusted))

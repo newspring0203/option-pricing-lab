@@ -1,5 +1,6 @@
 """Validate a saved Yahoo chart response; never silently fill missing prices."""
 import csv
+import hashlib
 import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -45,3 +46,10 @@ def save_csv(rows,path):
     with Path(path).open('w',newline='') as f:
         writer=csv.DictWriter(f,fieldnames=['date','close','adjusted_close'])
         writer.writeheader();writer.writerows(rows)
+
+
+def verify_source(path,manifest_path):
+    manifest=json.loads(Path(manifest_path).read_text())
+    digest=hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    if digest!=manifest['sha256']:raise ValueError('Raw source does not match manifest SHA-256')
+    return digest

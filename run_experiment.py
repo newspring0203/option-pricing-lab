@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from option_pricing.data import parse_prices,estimate_volatility,save_csv
-from option_pricing.model import Option,black_scholes,from_draws,monte_carlo,summarize
+from option_pricing.data import parse_prices,estimate_volatility,save_csv,verify_source
+from option_pricing.model import Option,black_scholes,from_draws,monte_carlo,summarize,control_variate
 
 ROOT=Path(__file__).resolve().parent
 SEED=20261105
@@ -20,6 +20,7 @@ SEED=20261105
 def main():
     out=ROOT/'outputs';out.mkdir(exist_ok=True)
     raw=ROOT/'data/aapl_2024_raw.json'
+    verify_source(raw,ROOT/'data/source_manifest.json')
     rows,metadata=parse_prices(raw)
     returns,sigma=estimate_volatility(rows)
     # Raw quote floats are rounded to the quoted cent for the spot input only.
@@ -45,13 +46,15 @@ def main():
     terminal_mcse=float(terminal.std(ddof=1)/math.sqrt(len(terminal)))
     plain=summarize(payoffs)
     repeat=monte_carlo(option,n=len(z),seed=SEED)
-    assert repeat['price']==plain['price']
-    assert math.isclose(black_scholes(Option(100,100,1,.05,0,.2)),10.450583572185565,abs_tol=1e-12)
+    if repeat['price']!=plain['price']:raise RuntimeError('Seed reproduction failed')
+    if not math.isclose(black_scholes(Option(100,100,1,.05,0,.2)),10.450583572185565,abs_tol=1e-12):raise RuntimeError('Known benchmark failed')
     checks=dict(same_seed_reproduced=True,finite_positive_terminal_prices=bool(np.all(np.isfinite(terminal)&(terminal>0))),
                 payoff_nonnegative=bool(np.all(payoffs>=0)),
                 terminal_mean_zscore=float((terminal.mean()-terminal_target)/terminal_mcse),
                 put_call_parity_error=black_scholes(option)-black_scholes(option,'put')-(option.spot*math.exp(-option.dividend_yield*option.maturity)-option.strike*math.exp(-option.rate*option.maturity)))
-    summary=dict(ticker='AAPL',valuation_date=rows[-1]['date'],first_observation=rows[0]['date'],
+    cv=control_variate(option)
+    cv_comparison=[control_variate(option,n=100000,pilot_n=20000,seed=s) for s in range(SEED,SEED+5)]
+    summary=dict(control_variate=cv,control_variate_seed_comparison=cv_comparison,ticker='AAPL',valuation_date=rows[-1]['date'],first_observation=rows[0]['date'],
                  price_observations=len(rows),return_observations=len(returns),data_metadata=metadata,
                  volatility_estimator='sample sd (ddof=1) of adjacent adjusted-close log returns * sqrt(252)',
                  daily_log_return_sd=float(returns.std(ddof=1)),historical_annual_volatility=sigma,
@@ -75,6 +78,17 @@ def main():
     fig,axes=plt.subplots(1,2,figsize=(10,4));axes[0].hist(terminal,bins=100,color='#176B87');axes[0].axvline(option.strike,color='#E07A26',label='Strike');axes[0].set(title='Simulated terminal stock prices under Q',xlabel='USD per share');axes[0].legend()
     axes[1].hist(payoffs,bins=100,color='#76ABAE');axes[1].set(title='Discounted call payoffs, including zero mass',xlabel='USD per share',ylabel='Count');fig.tight_layout();fig.savefig(out/'02_simulation.png');plt.close(fig)
     fig,ax=plt.subplots(figsize=(8,4.5));counts=[s['paths'] for s in convergence];means=[s['price'] for s in convergence];errors=[1.96*s['standard_error'] for s in convergence];ax.errorbar(counts,means,yerr=errors,fmt='o-',capsize=5,color='#176B87',label='MC estimate and approximate 95% CI');ax.axhline(benchmark,color='#E07A26',linestyle='--',label=f'Black–Scholes {benchmark:.4f}');ax.set_xscale('log');ax.set(xlabel='Number of independent draws',ylabel='Call value (USD per share)',title='Monte Carlo convergence under identical assumptions');ax.legend(fontsize=9);ax.grid(alpha=.2);fig.tight_layout();fig.savefig(out/'03_convergence.png');plt.close(fig)
+    grid=np.linspace(-10,10,1_000_001)
+    _,grid_payoff=from_draws(option,grid)
+    quadrature=float(np.trapz(grid_payoff*np.exp(-.5*grid**2)/np.sqrt(2*np.pi),grid))
+    summary['independent_quadrature']=dict(price=quadrature,absolute_difference=abs(quadrature-benchmark))
+    if abs(quadrature-benchmark)>1e-6:raise RuntimeError('Independent numerical integration failed')
+    method_rows=[dict(method='plain',main_paths=1_000_000,pilot_paths=0,price=plain['price'],standard_error=plain['standard_error']),
+                 dict(method='antithetic',main_paths=1_000_000,pilot_paths=0,price=antithetic['price'],standard_error=antithetic['standard_error']),
+                 dict(method='control_variate',main_paths=cv['paths'],pilot_paths=cv['pilot_paths'],price=cv['price'],standard_error=cv['standard_error'])]
+    with (out/'method_comparison.csv').open('w',newline='') as handle:
+        writer=csv.DictWriter(handle,fieldnames=list(method_rows[0]));writer.writeheader();writer.writerows(method_rows)
+    fig,ax=plt.subplots(figsize=(7,4));ax.bar([x['method'] for x in method_rows],[x['standard_error'] for x in method_rows],color=['#98C1D9','#176B87','#E07A26']);ax.set(title='Monte Carlo standard error | 1M main draws',ylabel='Standard error (USD per share)');fig.text(.5,.01,'Control variate adds 20,000 independent pilot draws',ha='center',fontsize=9);fig.tight_layout(rect=[0,.04,1,1]);fig.savefig(out/'04_method_comparison.png');plt.close(fig)
     (out/'results.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2,allow_nan=False))
     print(json.dumps(summary,ensure_ascii=False,indent=2))
 

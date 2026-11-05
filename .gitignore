@@ -7,3 +7,5 @@ __pycache__/
 # Personal draft links and browser proof
 blog/draft.json
 outputs/velog_draft.png
+
+blog/
