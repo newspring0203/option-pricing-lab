@@ -1,0 +1,8 @@
+{
+  "independent_normal_density_quadrature": 12.419241361075015,
+  "black_scholes": 12.419241361365579,
+  "quadrature_absolute_difference": 2.9056401729121717e-10,
+  "mc_error_in_standard_errors": -0.253321847106448,
+  "raw_hash_matches": true,
+  "notes": "Numerical integration independently checks the expectation calculation under the same fixed model; it does not validate market assumptions."
+}

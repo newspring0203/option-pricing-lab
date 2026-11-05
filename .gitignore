@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+.env
+
+# Personal draft links and browser proof
+blog/draft.json
+outputs/velog_draft.png

@@ -1,0 +1,9 @@
+{
+  "ticker": "AAPL",
+  "provider": "Yahoo Finance",
+  "url": "https://query1.finance.yahoo.com/v8/finance/chart/AAPL?period1=1704067200&period2=1735689600&interval=1d&events=div%2Csplits",
+  "requested_start": "2024-01-01",
+  "requested_end_exclusive": "2025-01-01",
+  "retrieved_at": "2026-11-05T12:37:54.225828+00:00",
+  "sha256": "ac8b41de9362317ab978970fd2383f511293e57b60820ba25c1bef796a7a9f76"
+}

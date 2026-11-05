@@ -1,0 +1,188 @@
+{
+  "ticker": "AAPL",
+  "valuation_date": "2024-12-31",
+  "first_observation": "2024-01-02",
+  "price_observations": 252,
+  "return_observations": 251,
+  "data_metadata": {
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "split_events": 0,
+    "dividend_events": 4
+  },
+  "volatility_estimator": "sample sd (ddof=1) of adjacent adjusted-close log returns * sqrt(252)",
+  "daily_log_return_sd": 0.014062674293254753,
+  "historical_annual_volatility": 0.22323803369071848,
+  "annualized_historical_log_mean": 0.3054291970244968,
+  "option": {
+    "spot": 250.42,
+    "strike": 250.0,
+    "maturity": 0.25,
+    "rate": 0.04,
+    "dividend_yield": 0.005,
+    "volatility": 0.22323803369071848
+  },
+  "assumed_inputs": [
+    "strike",
+    "maturity",
+    "rate",
+    "dividend_yield"
+  ],
+  "black_scholes": 12.419241361365579,
+  "monte_carlo": [
+    {
+      "price": 13.355474070431505,
+      "standard_error": 0.6164547160132299,
+      "ci95_low": 12.147222827045574,
+      "ci95_high": 14.563725313817436,
+      "independent_units": 1000,
+      "paths": 1000,
+      "error": 0.9362327090659264,
+      "absolute_error": 0.9362327090659264,
+      "benchmark_inside_ci": true
+    },
+    {
+      "price": 12.540152166422695,
+      "standard_error": 0.18437481326076036,
+      "ci95_low": 12.178777532431605,
+      "ci95_high": 12.901526800413786,
+      "independent_units": 10000,
+      "paths": 10000,
+      "error": 0.12091080505711638,
+      "absolute_error": 0.12091080505711638,
+      "benchmark_inside_ci": true
+    },
+    {
+      "price": 12.342585541422205,
+      "standard_error": 0.057676648643535604,
+      "ci95_low": 12.229539310080876,
+      "ci95_high": 12.455631772763534,
+      "independent_units": 100000,
+      "paths": 100000,
+      "error": -0.07665581994337423,
+      "absolute_error": 0.07665581994337423,
+      "benchmark_inside_ci": true
+    },
+    {
+      "price": 12.414615203761766,
+      "standard_error": 0.018261976440858394,
+      "ci95_low": 12.378821729937684,
+      "ci95_high": 12.450408677585848,
+      "independent_units": 1000000,
+      "paths": 1000000,
+      "error": -0.004626157603812686,
+      "absolute_error": 0.004626157603812686,
+      "benchmark_inside_ci": true
+    }
+  ],
+  "antithetic": {
+    "paths": 1000000,
+    "seed": 20261105,
+    "method": "antithetic",
+    "price": 12.399851521101068,
+    "standard_error": 0.013388416856880742,
+    "ci95_low": 12.373610224061581,
+    "ci95_high": 12.426092818140555,
+    "independent_units": 500000
+  },
+  "antithetic_se_ratio": 0.7331307703872728,
+  "seed_comparison": [
+    {
+      "paths": 100000,
+      "seed": 20261105,
+      "method": "plain",
+      "price": 12.342585541422205,
+      "standard_error": 0.057676648643535604,
+      "ci95_low": 12.229539310080876,
+      "ci95_high": 12.455631772763534,
+      "independent_units": 100000
+    },
+    {
+      "paths": 100000,
+      "seed": 20261106,
+      "method": "plain",
+      "price": 12.447714023337879,
+      "standard_error": 0.05782585304646217,
+      "ci95_low": 12.334375351366813,
+      "ci95_high": 12.561052695308945,
+      "independent_units": 100000
+    },
+    {
+      "paths": 100000,
+      "seed": 20261107,
+      "method": "plain",
+      "price": 12.408504131292744,
+      "standard_error": 0.05782658572403409,
+      "ci95_low": 12.295164023273637,
+      "ci95_high": 12.521844239311852,
+      "independent_units": 100000
+    },
+    {
+      "paths": 100000,
+      "seed": 20261108,
+      "method": "plain",
+      "price": 12.340947889612638,
+      "standard_error": 0.057502015856486434,
+      "ci95_low": 12.228243938533923,
+      "ci95_high": 12.453651840691352,
+      "independent_units": 100000
+    },
+    {
+      "paths": 100000,
+      "seed": 20261109,
+      "method": "plain",
+      "price": 12.339646912667654,
+      "standard_error": 0.05715936746562849,
+      "ci95_low": 12.227614552435021,
+      "ci95_high": 12.451679272900286,
+      "independent_units": 100000
+    }
+  ],
+  "sensitivity": [
+    {
+      "sigma": 0.1785904269525748,
+      "call": 10.21823944437861,
+      "label": "0.8x historical sigma"
+    },
+    {
+      "sigma": 0.22323803369071848,
+      "call": 12.419241361365579,
+      "label": "1.0x historical sigma"
+    },
+    {
+      "sigma": 0.26788564042886215,
+      "call": 14.622876181370813,
+      "label": "1.2x historical sigma"
+    }
+  ],
+  "checks": {
+    "same_seed_reproduced": true,
+    "finite_positive_terminal_prices": true,
+    "payoff_nonnegative": true,
+    "terminal_mean_zscore": 0.5174054361851927,
+    "put_call_parity_error": 0.0
+  },
+  "seed": 20261105,
+  "terminal_quantiles": {
+    "p05": 208.96564699684978,
+    "p50": 251.10519737456343,
+    "p95": 301.56099683849885
+  },
+  "discounted_payoff_zero_fraction": 0.484486,
+  "input_sha256": "ac8b41de9362317ab978970fd2383f511293e57b60820ba25c1bef796a7a9f76",
+  "source_manifest": {
+    "ticker": "AAPL",
+    "provider": "Yahoo Finance",
+    "url": "https://query1.finance.yahoo.com/v8/finance/chart/AAPL?period1=1704067200&period2=1735689600&interval=1d&events=div%2Csplits",
+    "requested_start": "2024-01-01",
+    "requested_end_exclusive": "2025-01-01",
+    "retrieved_at": "2026-11-05T12:37:54.225828+00:00",
+    "sha256": "ac8b41de9362317ab978970fd2383f511293e57b60820ba25c1bef796a7a9f76"
+  },
+  "environment": {
+    "python": "3.9.6",
+    "numpy": "1.26.4",
+    "matplotlib": "3.8.3",
+    "rng": "numpy.random.PCG64"
+  }
+}
